@@ -1,6 +1,6 @@
 {
     "name": "eckinox/eckinox-cs",
-    "version": "0.2.6",
+    "version": "0.2.7",
     "description": "A very opinionated CS/linting setup for PHP projects.",
     "type": "eckinox-metapackage",
     "autoload": {
@@ -12,7 +12,7 @@
         "class": "Eckinox\\CodingStandards\\ReplicationHandler"
     },
     "require": {
-        "eckinox/installer-plugin": "^1.2.4",
+        "eckinox/installer-plugin": "^1.2.5",
         "friendsofphp/php-cs-fixer": "^3.0",
         "friendsoftwig/twigcs": "^5.0",
         "phpmd/phpmd": "^2.10",
