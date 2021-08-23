@@ -24,7 +24,7 @@ class ReplicationHandler implements HandlerInterface
 	{
 		$filename = basename($projectFilename);
 
-		if (!$this->fileChanged($packageFilename, $projectFilename)) {
+		if (!$this->filesAreDifferent($packageFilename, $projectFilename)) {
 			$this->io->debug(sprintf("%s is already up-to-date.", $projectFilename));
 			return;
 		}
@@ -47,8 +47,8 @@ class ReplicationHandler implements HandlerInterface
 				if (!$changed) {
 					$this->io->info(sprintf("%s is already up-to-date.", $filename));
 				} else {
-					$this->io->info(sprintf("%s has been updated to match the version provided in eckinox/eckinox-cs.", $filename));
 					file_put_contents($projectFilename, json_encode($projectJsConfigs, JSON_PRETTY_PRINT));
+					$this->io->info(sprintf("%s has been updated to match the version provided in eckinox/eckinox-cs.", $filename));
 				}
 
 				break;
@@ -59,8 +59,29 @@ class ReplicationHandler implements HandlerInterface
 		}
 	}
 
-	protected function fileChanged(string $packageFilename, string $projectFilename)
+	public function postFileCreationCallback(string $projectFilename)
 	{
-		return md5_file($projectFilename) == md5_file($packageFilename);
+		$filename = basename($projectFilename);
+
+		if ($filename != 'pre-commit') {
+			return;
+		}
+
+		$rootDir = str_replace("DEV/hooks/pre-commit", "", $projectFilename);
+		$existingFilename = $rootDir . ".git/hooks/pre-commit";
+
+		if (file_exists($existingFilename)) {
+			if ($this->filesAreDifferent($projectFilename, $existingFilename)) {
+				$this->io->warning("Pre-commit hook already exists in your project. You should make sure it includes the execution of coding standards tools provided by eckinox/eckinox-cs.");
+			}
+		} else {
+			symlink($projectFilename, $existingFilename);
+			$this->io->info("A symbolic link has been created from \".git/hooks/pre-commit\" to \"DEV/hooks/pre-commit\".");
+		}
+	}
+
+	protected function filesAreDifferent(string $file1, string $file2)
+	{
+		return md5_file($file1) == md5_file($file2);
 	}
 }
