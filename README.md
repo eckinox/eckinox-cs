@@ -24,6 +24,7 @@ Not only does it add other PHP dependencies via Composer, but it also:
 - Creates configuration files.
 - Adds shell scripts to facilitate usage of the tools.
 - Adds a Git pre-commit hook.
+- Adds a Github actions workflow.
 
 Here's a bit of information about all of that.
 
@@ -52,3 +53,8 @@ The package includes a pre-commit script that will execute all of the provided t
 
 If you don't have a pre-commit script already, the package will automatically set up this one (as a symbolic link) when you install the package.  
 If you already have a pre-commit, you will have to merge the two manually.
+
+### Github actions workflow
+To ensure your project is always respecting the standards, this package adds a workflow for Github Actions that runs every included tool on your codebase.
+
+This allows project members and maintainers to view the status of every branch and pull request, right in Github.
