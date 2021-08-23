@@ -1,6 +1,6 @@
 {
     "name": "eckinox/eckinox-cs",
-    "version": "0.2.9",
+    "version": "1.0.0",
     "description": "A very opinionated CS/linting setup for PHP projects.",
     "type": "eckinox-metapackage",
     "autoload": {
