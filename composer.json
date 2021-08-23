@@ -3,8 +3,16 @@
     "version": "0.1.1",
     "description": "A very opinionated CS/linting setup for PHP projects.",
     "type": "eckinox-metapackage",
+    "autoload": {
+        "psr-4": {
+            "Eckinox\\CodingStandards\\": "src/"
+        }
+    },
+    "extra": {
+        "class": "Eckinox\\CodingStandards\\ReplicationHandler"
+    },
     "require": {
-        "eckinox/installer-plugin": "^1.1.1"
+        "eckinox/installer-plugin": "^1.2"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.0",
@@ -12,7 +20,8 @@
         "phpmd/phpmd": "^2.10",
         "phpstan/phpstan": "^0.12.95",
         "phpstan/extension-installer": "^1.1",
-        "phpstan/phpstan-symfony": "^0.12.42"
+        "phpstan/phpstan-symfony": "^0.12.42",
+        "composer/composer": "^1.3 || ^2.1"
     },
     "license": "MIT",
     "authors": [
