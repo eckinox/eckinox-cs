@@ -15,6 +15,11 @@ To add the coding standards checkers and linters to your PHP project, follow the
    ```bash
    git add --a && git commit -m "Adds coding standards and linting checks via eckinox/eckinox-cs"
    ```
+5. Run the following command to install Javascript dependencies:
+   ```bash
+   npm install
+   ```
+6. Enjoy!
 
 ## What's included
 This package is a like a metapackage, but with a little sugar on top.  
