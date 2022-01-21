@@ -7,7 +7,7 @@
 	},
 	"scripts": {
 		"lint": "npm run lint:js && npm run lint:css",
-		"lint:css": "npx stylelint \"**/*.css\" --config .stylelintrc.json --allow-empty-input",
+		"lint:css": "npx stylelint \"**/*.css\" --config .stylelintrc.json --allow-empty-input --cache",
 		"lint:js": "npx eslint --ext .js,.html,.twigs"
 	}
 }
