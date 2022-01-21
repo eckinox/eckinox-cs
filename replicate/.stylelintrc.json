@@ -12,6 +12,10 @@
 		  "no-descending-specificity": null,
 		  "rule-empty-line-before": null,
 		  "font-family-no-missing-generic-family-keyword": null
-	}
+	},
+	"ignorePath": [
+		"vendor/**/*.css",
+		"node_modules/**/*.css"
+	]
   }
   
