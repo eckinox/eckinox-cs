@@ -32,14 +32,14 @@ jobs:
             - name: Install JS dependencies (npm install)
               run: npm i --ignore-scripts --production=false
             - name: PHP CS Fixer
-              run: DEV/ci/php-cs-fixer.sh
+              run: DEV/cs/php-cs-fixer.sh
             - name: PHP Stan
-              run: DEV/ci/phpstan.sh
+              run: DEV/cs/phpstan.sh
             - name: PHP MD
-              run: DEV/ci/phpmd.sh
+              run: DEV/cs/phpmd.sh
             - name: Twigcs
-              run: DEV/ci/twigcs.sh
+              run: DEV/cs/twigcs.sh
             - name: CSS stylelint
-              run: DEV/ci/stylelint.sh
+              run: DEV/cs/stylelint.sh
             - name: ESLint (JS)
-              run: DEV/ci/eslint.sh
+              run: DEV/cs/eslint.sh
