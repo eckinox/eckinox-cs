@@ -63,3 +63,8 @@ If you already have a pre-commit, you will have to merge the two manually.
 To ensure your project is always respecting the standards, this package adds a workflow for Github Actions that runs every included tool on your codebase.
 
 This allows project members and maintainers to view the status of every branch and pull request, right in Github.
+
+#### Authentication for private repositories
+If you are using private Github repositories via Composer, set up the secrets for HTTP authentication as described in [php-actions/composer's documentation](https://github.com/php-actions/composer#http-basic-authentication). 
+
+The workflow included by eckinox-cs already includes the steps necessary to retrieve and use that authentication token, if it is present.
