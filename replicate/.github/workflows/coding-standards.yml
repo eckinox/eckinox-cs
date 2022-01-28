@@ -25,6 +25,8 @@ jobs:
                 php_extensions: xsl intl
             - name: Remove auth.json file
               run: rm -f $GITHUB_WORKSPACE/auth.json
+            - name: Restore configs overwritten by the eckinox/eckinox-cs install
+              run: git checkout -- .
             - name: Use Node.js 12.x
               uses: actions/setup-node@v1
               with:
