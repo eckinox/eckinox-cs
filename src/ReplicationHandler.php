@@ -9,8 +9,13 @@ use Eckinox\Composer\HandlerInterface;
 
 class ReplicationHandler implements HandlerInterface
 {
+	/** @var PackageInterface */
 	protected $package;
+
+	/** @var Filesystem */
 	protected $filesystem;
+
+	/** @var IOInterface */
 	protected $io;
 
 	public function __construct(PackageInterface $package, Filesystem $filesystem, IOInterface $io)
