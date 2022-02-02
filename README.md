@@ -38,6 +38,7 @@ Here are the tools that are included and configured in this package:
 
 | Tool                                                                                                                                  | Config                           | Git-aware |
 |---------------------------------------------------------------------------------------------------------------------------------------|----------------------------------|-----------|
+| [EditorConfig](https://editorconfig.org/)<br>Helps maintain consistent coding styles across various editors and IDEs.                 | `.editorconfig`                  |    N/A    |
 | [PHP-CS-Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer)<br>A tool to automatically fix PHP Coding Standards issues               | `.php_cs.dist`                   |     ✅     |
 | [PHPStan](https://phpstan.org/)<br>PHP Static Analysis Tool - discover bugs in your code without running it!                          | `phpstan.neon`                   |     ✅     |
 | [PHPMD](https://phpmd.org/)<br>PHP Mess Detector                                                                                      | `.phpmd.xml`                     |     ✅     |
