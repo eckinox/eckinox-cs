@@ -25,7 +25,7 @@ class ReplicationHandler implements HandlerInterface
 		$this->io = $io;
 	}
 
-	public function handleExistingFile(string $packageFilename, string $projectFilename)
+	public function handleExistingFile(string $packageFilename, string $projectFilename, ?string $currentlyInstalledFilename = null)
 	{
 		$filename = basename($projectFilename);
 
@@ -34,11 +34,15 @@ class ReplicationHandler implements HandlerInterface
 			return;
 		}
 
+		if ($currentlyInstalledFilename && !$this->filesAreDifferent($packageFilename, $currentlyInstalledFilename)) {
+			$this->io->debug(sprintf("%s hasn't changed since previous version - already up-to-date.", $projectFilename));
+			return;
+		}
+
 		switch ($filename) {
 			case 'package.json':
 				$packageJsConfigs = json_decode(file_get_contents($packageFilename), true);
 				$projectJsConfigs = json_decode(file_get_contents($projectFilename), true);
-				$changed = false;
 
 				foreach ($packageJsConfigs as $section => $configs) {
 					foreach ($configs as $key => $value) {
@@ -52,7 +56,13 @@ class ReplicationHandler implements HandlerInterface
 				if (!$changed) {
 					$this->io->info(sprintf("%s is already up-to-date.", $filename));
 				} else {
-					file_put_contents($projectFilename, json_encode($projectJsConfigs, JSON_PRETTY_PRINT));
+					$json = json_encode($projectJsConfigs, JSON_PRETTY_PRINT);
+					$formattedJson = preg_replace_callback('/^ +/m', function ($m) {
+						return str_repeat("\t", strlen($m[0]) / 4);
+					}, $json);
+					$formattedJson .= "\n";
+
+					$this->filesystem->filePutContentsIfModified($projectFilename, $formattedJson);
 					$this->io->info(sprintf("%s has been updated to match the version provided in eckinox/eckinox-cs.", $filename));
 				}
 
@@ -85,8 +95,45 @@ class ReplicationHandler implements HandlerInterface
 		}
 	}
 
-	protected function filesAreDifferent(string $file1, string $file2)
+	protected function filesAreDifferent(string $filename1, string $filename2)
 	{
-		return md5_file($file1) == md5_file($file2);
+		if (filetype($filename1) !== filetype($filename2)) {
+			return true;
+		}
+
+		if (filesize($filename1) !== filesize($filename2)) {
+			return true;
+		}
+
+		$file1 = fopen($filename1, 'rb');
+
+		if (!$file1) {
+			return true;
+		}
+
+		$file2 = fopen($filename2, 'rb');
+
+		if (!$file2) {
+			fclose($file1);
+			return true;
+		}
+
+		$same = true;
+
+		while (!feof($file1) and !feof($file2)) {
+			if (fread($file1, 4096) !== fread($file2, 4096)) {
+				$same = false;
+				break;
+			}
+		}
+
+		if (feof($file1) !== feof($file2)) {
+			$same = false;
+		}
+
+		fclose($file1);
+		fclose($file2);
+
+		return !$same;
 	}
 }

@@ -1,0 +1,6 @@
+{
+	"homepage": "/",
+	"dashboard": "/dashboard",
+	"login": "/login",
+	"loguot": "/logout"
+}

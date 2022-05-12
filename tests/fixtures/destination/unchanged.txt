@@ -1,0 +1,3 @@
+This file won't be changed ever.
+Its content will always remain the same.
+No matter what happens, this is the one thing you can count on.

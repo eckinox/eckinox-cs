@@ -1,6 +1,6 @@
 {
     "name": "eckinox/eckinox-cs",
-    "version": "1.2.1",
+    "version": "1.3.0",
     "description": "A very opinionated CS/linting setup for PHP projects.",
     "type": "eckinox-metapackage",
     "autoload": {
@@ -8,11 +8,16 @@
             "Eckinox\\CodingStandards\\": "src/"
         }
     },
+    "autoload-dev": {
+      "psr-4": {
+        "Eckinox\\CodingStandards\\Tests\\": "tests/"
+      }
+    },
     "extra": {
         "class": "Eckinox\\CodingStandards\\ReplicationHandler"
     },
     "require": {
-        "eckinox/installer-plugin": "^1.2.5",
+        "eckinox/installer-plugin": "^2.0.0",
         "friendsofphp/php-cs-fixer": "^3.0",
         "friendsoftwig/twigcs": "^5.0",
         "phpmd/phpmd": "^2.10",
@@ -21,7 +26,11 @@
         "phpstan/phpstan-symfony": "^1.1"
     },
     "require-dev": {
-        "composer/composer": "^1.3 || ^2.1"
+        "composer/composer": "^1.3 || ^2.1",
+        "phpunit/phpunit": "^9.5"
+    },
+    "scripts": {
+        "test": "phpunit"
     },
     "license": "MIT",
     "authors": [

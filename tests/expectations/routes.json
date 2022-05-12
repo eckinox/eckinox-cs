@@ -1,0 +1,8 @@
+{
+	"homepage": "/",
+	"dashboard": "/admin",
+	"login": "/login",
+	"logout": "/logout",
+	"news": "/news",
+	"profile": "/profile"
+}
