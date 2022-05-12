@@ -71,4 +71,22 @@ class ReplicationHandlerTest extends TestCase
 			$this->testDir . "fixtures/installed_source/phpstan.neon"
 		);
 	}
+
+	public function testFileChangesDontOverwriteUserContent(): void
+	{
+		$expectedContent = file_get_contents($this->testDir . "expectations/routes.json");
+
+		$this->mockFilesystem->expects($this->once())
+			->method("filePutContentsIfModified")
+			->with(
+				$this->testDir . "fixtures/destination/routes.json",
+				$expectedContent
+			);
+
+		$this->replicationHandler->handleExistingFile(
+			$this->testDir . "fixtures/source/routes.json",
+			$this->testDir . "fixtures/destination/routes.json",
+			$this->testDir . "fixtures/installed_source/routes.json"
+		);
+	}
 }
