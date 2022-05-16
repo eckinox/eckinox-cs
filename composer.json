@@ -38,5 +38,11 @@
             "name": "Émile Perron",
             "email": "emilep@eckinox.ca"
         }
-    ]
+    ],
+    "config": {
+        "allow-plugins": {
+            "eckinox/installer-plugin": true,
+            "phpstan/extension-installer": true
+        }
+    }
 }

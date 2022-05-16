@@ -69,8 +69,13 @@ class ReplicationHandler implements HandlerInterface
 				break;
 
 			default:
-				$this->io->info(sprintf("Overwriting %s with the version from eckinox/eckinox-cs.", $filename));
-				$this->filesystem->copy($packageFilename, $projectFilename);
+				if ($currentlyInstalledFilename && $this->canUseGit()) {
+					$this->io->info(sprintf("Updating %s with the changes from eckinox/eckinox-cs.", $filename));
+					$this->mergeEditedFileWithGit($packageFilename, $projectFilename, $currentlyInstalledFilename);
+				} else {
+					$this->io->info(sprintf("Overwriting %s with the version from eckinox/eckinox-cs. (to enable automatic merges, allow exec and install git)", $filename));
+					$this->filesystem->copy($packageFilename, $projectFilename);
+				}
 		}
 	}
 
@@ -93,6 +98,70 @@ class ReplicationHandler implements HandlerInterface
 			symlink($projectFilename, $existingFilename);
 			$this->io->info("A symbolic link has been created from \".git/hooks/pre-commit\" to \"DEV/hooks/pre-commit\".");
 		}
+	}
+
+	protected function canUseGit(): bool
+	{
+		static $cachedResult = null;
+
+		if ($cachedResult !== null) {
+			return $cachedResult;
+		}
+		
+		if (@exec('echo EXEC') != 'EXEC') {
+			return $cachedResult = false;
+		}
+
+		return $cachedResult = preg_match("~^.*[0-9]\.[0-9].*$~", @exec('git --version') ?: "");
+	}
+
+	protected function mergeEditedFileWithGit(string $packageFilename, string $projectFilename, string $currentlyInstalledFilename)
+	{
+		$originalWorkingDirectory = getcwd();
+		
+		$tmpDir = rtrim(sys_get_temp_dir(), "/") . "/" . "merge" . uniqid();
+		mkdir($tmpDir);
+		chdir($tmpDir);
+
+		$filename = $tmpDir . "/" . basename($packageFilename);
+
+		file_put_contents($filename, file_get_contents($currentlyInstalledFilename));
+		exec("git init && git checkout -b source 2> /dev/null && git add $filename && git commit -m 'original source file'");
+		
+		exec("git checkout -b user 2> /dev/null");
+		file_put_contents($filename, file_get_contents($projectFilename));
+		exec("git add $filename && git commit -m 'user changes'");
+		
+		exec("git checkout source 2> /dev/null");
+		file_put_contents($filename, file_get_contents($packageFilename));
+		exec("git add $filename && git commit -m 'source package update'");
+		
+		exec("git checkout user 2> /dev/null");
+		exec("git merge source", $mergeOutput);
+		
+		$mergeHasConflict = strpos(implode("\n", $mergeOutput), "CONFLICT") !== false;
+		$updatedContent = file_get_contents($filename);
+		
+		if ($mergeHasConflict) {
+			$this->io->warning(sprintf("%s has been updated by both you and eckinox-cs. You must check the file and fix the conflicts.", $projectFilename));
+
+			// Update conflicts to use more readable names
+			$updatedContent = str_replace(
+				[
+					"<<<<<<< HEAD",
+					">>>>>>> source"
+				], [
+					"<<<<<<< HEAD (your changes)",
+					">>>>>>> source (eckinox-cs changes)"
+				], 
+				$updatedContent
+			);
+		}
+
+		$this->filesystem->filePutContentsIfModified($projectFilename, $updatedContent);
+
+		exec("rm -rf $tmpDir");
+		chdir($originalWorkingDirectory);
 	}
 
 	protected function filesAreDifferent(string $filename1, string $filename2)

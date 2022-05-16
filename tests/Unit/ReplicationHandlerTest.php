@@ -83,6 +83,10 @@ class ReplicationHandlerTest extends TestCase
 				$expectedContent
 			);
 
+		$this->mockIo->expects($this->once())
+			->method("warning")
+			->with($this->stringContains("has been updated by both you and eckinox-cs. You must check the file and fix the conflicts."));
+
 		$this->replicationHandler->handleExistingFile(
 			$this->testDir . "fixtures/source/routes.json",
 			$this->testDir . "fixtures/destination/routes.json",
