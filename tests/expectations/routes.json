@@ -1,0 +1,12 @@
+{
+	"homepage": "/",
+	"dashboard": "/admin",
+	"login": "/login",
+<<<<<<< HEAD (your changes)
+	"loguot": "/logout",
+	"profile": "/profile"
+=======
+	"logout": "/logout",
+	"news": "/news"
+>>>>>>> source (eckinox-cs changes)
+}

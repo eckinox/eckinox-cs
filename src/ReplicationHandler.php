@@ -25,7 +25,7 @@ class ReplicationHandler implements HandlerInterface
 		$this->io = $io;
 	}
 
-	public function handleExistingFile(string $packageFilename, string $projectFilename)
+	public function handleExistingFile(string $packageFilename, string $projectFilename, ?string $currentlyInstalledFilename = null)
 	{
 		$filename = basename($projectFilename);
 
@@ -34,11 +34,15 @@ class ReplicationHandler implements HandlerInterface
 			return;
 		}
 
+		if ($currentlyInstalledFilename && !$this->filesAreDifferent($packageFilename, $currentlyInstalledFilename)) {
+			$this->io->debug(sprintf("%s hasn't changed since previous version - already up-to-date.", $projectFilename));
+			return;
+		}
+
 		switch ($filename) {
 			case 'package.json':
 				$packageJsConfigs = json_decode(file_get_contents($packageFilename), true);
 				$projectJsConfigs = json_decode(file_get_contents($projectFilename), true);
-				$changed = false;
 
 				foreach ($packageJsConfigs as $section => $configs) {
 					foreach ($configs as $key => $value) {
@@ -52,15 +56,26 @@ class ReplicationHandler implements HandlerInterface
 				if (!$changed) {
 					$this->io->info(sprintf("%s is already up-to-date.", $filename));
 				} else {
-					file_put_contents($projectFilename, json_encode($projectJsConfigs, JSON_PRETTY_PRINT));
+					$json = json_encode($projectJsConfigs, JSON_PRETTY_PRINT);
+					$formattedJson = preg_replace_callback('/^ +/m', function ($m) {
+						return str_repeat("\t", strlen($m[0]) / 4);
+					}, $json);
+					$formattedJson .= "\n";
+
+					$this->filesystem->filePutContentsIfModified($projectFilename, $formattedJson);
 					$this->io->info(sprintf("%s has been updated to match the version provided in eckinox/eckinox-cs.", $filename));
 				}
 
 				break;
 
 			default:
-				$this->io->info(sprintf("Overwriting %s with the version from eckinox/eckinox-cs.", $filename));
-				$this->filesystem->copy($packageFilename, $projectFilename);
+				if ($currentlyInstalledFilename && $this->canUseGit()) {
+					$this->io->info(sprintf("Updating %s with the changes from eckinox/eckinox-cs.", $filename));
+					$this->mergeEditedFileWithGit($packageFilename, $projectFilename, $currentlyInstalledFilename);
+				} else {
+					$this->io->info(sprintf("Overwriting %s with the version from eckinox/eckinox-cs. (to enable automatic merges, allow exec and install git)", $filename));
+					$this->filesystem->copy($packageFilename, $projectFilename);
+				}
 		}
 	}
 
@@ -85,8 +100,110 @@ class ReplicationHandler implements HandlerInterface
 		}
 	}
 
-	protected function filesAreDifferent(string $file1, string $file2)
+	protected function canUseGit(): bool
 	{
-		return md5_file($file1) == md5_file($file2);
+		static $cachedResult = null;
+
+		if ($cachedResult !== null) {
+			return $cachedResult;
+		}
+		
+		if (@exec('echo EXEC') != 'EXEC') {
+			return $cachedResult = false;
+		}
+
+		return $cachedResult = preg_match("~^.*[0-9]\.[0-9].*$~", @exec('git --version') ?: "");
+	}
+
+	protected function mergeEditedFileWithGit(string $packageFilename, string $projectFilename, string $currentlyInstalledFilename)
+	{
+		$originalWorkingDirectory = getcwd();
+		
+		$tmpDir = rtrim(sys_get_temp_dir(), "/") . "/" . "merge" . uniqid();
+		mkdir($tmpDir);
+		chdir($tmpDir);
+
+		$filename = $tmpDir . "/" . basename($packageFilename);
+
+		file_put_contents($filename, file_get_contents($currentlyInstalledFilename));
+		exec("git init 2> /dev/null && git config user.email 'dev@eckinox.ca' && git config user.name 'EckinoxCS'");
+		exec("git checkout -b source 2> /dev/null && git add $filename && git commit -m 'original source file'");
+		
+		exec("git checkout -b user 2> /dev/null");
+		file_put_contents($filename, file_get_contents($projectFilename));
+		exec("git add $filename && git commit -m 'user changes'");
+		
+		exec("git checkout source 2> /dev/null");
+		file_put_contents($filename, file_get_contents($packageFilename));
+		exec("git add $filename && git commit -m 'source package update'");
+		
+		exec("git checkout user 2> /dev/null");
+		exec("git merge source", $mergeOutput);
+		
+		$mergeHasConflict = strpos(implode("\n", $mergeOutput), "CONFLICT") !== false;
+		$updatedContent = file_get_contents($filename);
+		
+		if ($mergeHasConflict) {
+			$this->io->warning(sprintf("%s has been updated by both you and eckinox-cs. You must check the file and fix the conflicts.", $projectFilename));
+
+			// Update conflicts to use more readable names
+			$updatedContent = str_replace(
+				[
+					"<<<<<<< HEAD",
+					">>>>>>> source"
+				], [
+					"<<<<<<< HEAD (your changes)",
+					">>>>>>> source (eckinox-cs changes)"
+				], 
+				$updatedContent
+			);
+		}
+
+		$this->filesystem->filePutContentsIfModified($projectFilename, $updatedContent);
+
+		exec("rm -rf $tmpDir");
+		chdir($originalWorkingDirectory);
+	}
+
+	protected function filesAreDifferent(string $filename1, string $filename2)
+	{
+		if (filetype($filename1) !== filetype($filename2)) {
+			return true;
+		}
+
+		if (filesize($filename1) !== filesize($filename2)) {
+			return true;
+		}
+
+		$file1 = fopen($filename1, 'rb');
+
+		if (!$file1) {
+			return true;
+		}
+
+		$file2 = fopen($filename2, 'rb');
+
+		if (!$file2) {
+			fclose($file1);
+			return true;
+		}
+
+		$same = true;
+
+		while (!feof($file1) and !feof($file2)) {
+			if (fread($file1, 4096) !== fread($file2, 4096)) {
+				$same = false;
+				break;
+			}
+		}
+
+		if (feof($file1) !== feof($file2)) {
+			$same = false;
+		}
+
+		fclose($file1);
+		fclose($file2);
+
+		return !$same;
 	}
 }

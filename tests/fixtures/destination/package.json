@@ -1,0 +1,8 @@
+{
+	"name": "test-package",
+	"devDependencies": {
+		"fetch": ">=1.0",
+		"eslint": "^8.0",
+		"eslint-plugin-html": "^6.1.1"
+	}
+}
