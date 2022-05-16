@@ -6,16 +6,25 @@ use Composer\IO\IOInterface;
 use Composer\Package\PackageInterface;
 use Composer\Util\Filesystem;
 use Eckinox\CodingStandards\ReplicationHandler;
-use Eckinox\CodingStandards\Tests\Mock\MockFilesystem;
 use PHPUnit\Framework\TestCase;
 
 class ReplicationHandlerTest extends TestCase
 {
-	private string $testDir;
-	private PackageInterface $packageStub;
-	private IOInterface $mockIo;
-	private Filesystem $mockFilesystem;
-	private ReplicationHandler $replicationHandler;
+
+	/** @var string */
+	private $testDir;
+
+	/** @var PackageInterface */
+	private $packageStub;
+
+	/** @var IOInterface */
+	private $mockIo;
+
+	/** @var Filesystem */
+	private $mockFilesystem;
+
+	/** @var ReplicationHandler */
+	private $replicationHandler;
 	
 	public function setUp(): void
 	{
