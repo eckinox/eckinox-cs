@@ -126,15 +126,15 @@ class ReplicationHandler implements HandlerInterface
 		$filename = $tmpDir . "/" . basename($packageFilename);
 
 		file_put_contents($filename, file_get_contents($currentlyInstalledFilename));
-		exec("git init && git checkout -b source 2> /dev/null && git add $filename && git commit -m 'original source file'");
+		exec("git init && git checkout -b source 2> /dev/null && git add $filename && git commit -m 'original source file' --author='Eckinox <dev@eckinox.ca>'");
 		
 		exec("git checkout -b user 2> /dev/null");
 		file_put_contents($filename, file_get_contents($projectFilename));
-		exec("git add $filename && git commit -m 'user changes'");
+		exec("git add $filename && git commit -m 'user changes' --author='Eckinox <dev@eckinox.ca>'");
 		
 		exec("git checkout source 2> /dev/null");
 		file_put_contents($filename, file_get_contents($packageFilename));
-		exec("git add $filename && git commit -m 'source package update'");
+		exec("git add $filename && git commit -m 'source package update' --author='Eckinox <dev@eckinox.ca>'");
 		
 		exec("git checkout user 2> /dev/null");
 		exec("git merge source", $mergeOutput);
