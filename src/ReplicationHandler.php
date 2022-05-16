@@ -126,7 +126,7 @@ class ReplicationHandler implements HandlerInterface
 		$filename = $tmpDir . "/" . basename($packageFilename);
 
 		file_put_contents($filename, file_get_contents($currentlyInstalledFilename));
-		exec("git init && git config user.email 'dev@eckinox.ca' && git config user.name 'EckinoxCS'");
+		exec("git init 2> /dev/null && git config user.email 'dev@eckinox.ca' && git config user.name 'EckinoxCS'");
 		exec("git checkout -b source 2> /dev/null && git add $filename && git commit -m 'original source file'");
 		
 		exec("git checkout -b user 2> /dev/null");
