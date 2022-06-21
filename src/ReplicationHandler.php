@@ -95,6 +95,11 @@ class ReplicationHandler implements HandlerInterface
 				$this->io->warning("Pre-commit hook already exists in your project. You should make sure it includes the execution of coding standards tools provided by eckinox/eckinox-cs.");
 			}
 		} else {
+			if (is_link($existingFilename)) {
+				$this->io->info("The symbolic link for your pre-commit hook (\".git/hooks/pre-commit\") is broken. Deleting it and recreating it...");
+				unlink($existingFilename);
+			}
+			
 			symlink($projectFilename, $existingFilename);
 			$this->io->info("A symbolic link has been created from \".git/hooks/pre-commit\" to \"DEV/hooks/pre-commit\".");
 		}
