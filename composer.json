@@ -19,7 +19,7 @@
     "require": {
         "eckinox/installer-plugin": "^2.0.0",
         "friendsofphp/php-cs-fixer": "^3.0",
-        "friendsoftwig/twigcs": "^6.0",
+        "friendsoftwig/twigcs": "^5.0",
         "phpmd/phpmd": "^2.10",
         "phpstan/phpstan": "^1.4",
         "phpstan/extension-installer": "^1.1",
