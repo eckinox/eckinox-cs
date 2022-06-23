@@ -43,6 +43,7 @@ class ReplicationHandler implements HandlerInterface
 			case 'package.json':
 				$packageJsConfigs = json_decode(file_get_contents($packageFilename), true);
 				$projectJsConfigs = json_decode(file_get_contents($projectFilename), true);
+				$changed = false;
 
 				foreach ($packageJsConfigs as $section => $configs) {
 					foreach ($configs as $key => $value) {
