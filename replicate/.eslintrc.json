@@ -34,5 +34,6 @@
 	"settings": {
 		"html/html-extensions": [".html", ".twig"],
 		"html/javascript-mime-types": ["text/javascript", ""]
-	}
+	},
+    "new": "setting"
 }
