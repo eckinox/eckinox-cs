@@ -27,6 +27,8 @@ class ReplicationHandler implements HandlerInterface
 
 	public function handleExistingFile(string $packageFilename, string $projectFilename, ?string $currentlyInstalledFilename = null)
 	{
+		$this->io->debug("Handling existing file:\n\tpackageFilename: $packageFilename\n\tprojectFilename: $projectFilename\n\tcurrentlyInstalledFilename: $currentlyInstalledFilename");
+
 		$filename = basename($projectFilename);
 
 		if (!$this->filesAreDifferent($packageFilename, $projectFilename)) {
@@ -181,19 +183,19 @@ class ReplicationHandler implements HandlerInterface
 	protected function filesAreDifferent(string $filename1, string $filename2)
 	{
 		if (filetype($filename1) !== filetype($filename2)) {
-			$this->io->warning("Files have different types:\n\t" . filetype($filename1) . " - $filename1\n\t" . filetype($filename2) . " - $filename2");
+			$this->io->debug("Files have different types:\n\t" . filetype($filename1) . " - $filename1\n\t" . filetype($filename2) . " - $filename2");
 			return true;
 		}
 
 		if (filesize($filename1) !== filesize($filename2)) {
-			$this->io->warning("Files have different size:\n\t" . filesize($filename1) . " - $filename1\n\t" . filesize($filename2) . " - $filename2");
+			$this->io->debug("Files have different size:\n\t" . filesize($filename1) . " - $filename1\n\t" . filesize($filename2) . " - $filename2");
 			return true;
 		}
 
 		$file1 = fopen($filename1, 'rb');
 
 		if (!$file1) {
-			$this->io->warning("Files are different:\n\tCould not open $filename1");
+			$this->io->debug("Files are different:\n\tCould not open $filename1");
 			return true;
 		}
 
@@ -201,7 +203,7 @@ class ReplicationHandler implements HandlerInterface
 
 		if (!$file2) {
 			fclose($file1);
-			$this->io->warning("Files are different:\n\tCould not open $filename2");
+			$this->io->debug("Files are different:\n\tCould not open $filename2");
 			return true;
 		}
 
@@ -209,14 +211,14 @@ class ReplicationHandler implements HandlerInterface
 
 		while (!feof($file1) and !feof($file2)) {
 			if (fread($file1, 4096) !== fread($file2, 4096)) {
-				$this->io->warning("Files are different:\n\tEncountered difference in content");
+				$this->io->debug("Files are different:\n\tEncountered difference in content");
 				$same = false;
 				break;
 			}
 		}
 
 		if (feof($file1) !== feof($file2)) {
-			$this->io->warning("Files are different:\n\tEncountered different EOF");
+			$this->io->debug("Files are different:\n\tEncountered different EOF");
 			$same = false;
 		}
 
