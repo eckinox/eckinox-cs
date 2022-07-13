@@ -27,9 +27,9 @@ class ReplicationHandler implements HandlerInterface
 
 	public function handleExistingFile(string $packageFilename, string $projectFilename, ?string $currentlyInstalledFilename = null)
 	{
-		$this->io->debug("Handling existing file:\n\tpackageFilename: $packageFilename\n\tprojectFilename: $projectFilename\n\tcurrentlyInstalledFilename: $currentlyInstalledFilename");
-
 		$filename = basename($projectFilename);
+
+		$this->io->debug("Handling existing file $filename:\n\tpackageFilename: $packageFilename\n\tprojectFilename: $projectFilename\n\tcurrentlyInstalledFilename: $currentlyInstalledFilename");
 
 		if (!$this->filesAreDifferent($packageFilename, $projectFilename)) {
 			$this->io->debug(sprintf("%s is already up-to-date.", $projectFilename));
