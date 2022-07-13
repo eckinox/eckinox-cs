@@ -70,9 +70,6 @@ class ReplicationHandlerTest extends TestCase
 	{
 		$this->mockFilesystem->expects($this->never())->method("copy");
 		$this->mockFilesystem->expects($this->never())->method("filePutContentsIfModified");
-		$this->mockIo->expects($this->once())
-			->method("debug")
-			->with($this->stringContains("hasn't changed since previous version"));
 
 		$this->replicationHandler->handleExistingFile(
 			$this->testDir . "fixtures/source/phpstan.neon",
