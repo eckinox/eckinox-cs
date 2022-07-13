@@ -46,10 +46,17 @@ class ReplicationHandler implements HandlerInterface
 				$changed = false;
 
 				foreach ($packageJsConfigs as $section => $configs) {
-					foreach ($configs as $key => $value) {
-						if (!isset($projectJsConfigs[$section], $projectJsConfigs[$section][$key]) || $projectJsConfigs[$section][$key] != $value) {
+					if (!is_array($configs)) {
+						if (!isset($projectJsConfigs[$section]) || $projectJsConfigs[$section] != $configs) {
 							$changed = true;
-							$projectJsConfigs[$section][$key] = $value;
+							$projectJsConfigs[$section] = $configs;
+						}
+					} else {
+						foreach ($configs as $key => $value) {
+							if (!isset($projectJsConfigs[$section], $projectJsConfigs[$section][$key]) || $projectJsConfigs[$section][$key] != $value) {
+								$changed = true;
+								$projectJsConfigs[$section][$key] = $value;
+							}
 						}
 					}
 				}
