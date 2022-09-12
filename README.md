@@ -5,21 +5,25 @@ To add the coding standards checkers and linters to your PHP project, follow the
 
 1. Make sure you don't have any uncommited files in your project.  
    This package will add files to your project, so you'll likely want to commit all of these all at once.
-2. Add the package to your project with Composer using the command below:
+1. Add the package to your project with Composer using the command below:
    ```bash
    composer require --dev eckinox/eckinox-cs
    ```
    The package will automatically add all of the configuration files and utility scripts you'll need to your project.
-3. Follow any additional instructions provided in the <abbr title="Command Line Interface">CLI</abbr>.
-4. Run the following command to install Javascript dependencies:
+1. Follow any additional instructions provided in the <abbr title="Command Line Interface">CLI</abbr>.
+1. Run the following command to install Javascript dependencies:
    ```bash
    npm install
    ```
-5. Commit the files to your project:
+1. Ensure scripts are executable:
+   ```bash
+   chmod +x DEV/**/*
+   ```
+1. Commit the files to your project:
    ```bash
    git add --a && git commit -m "Adds coding standards and linting checks via eckinox/eckinox-cs"
    ```
-6. Enjoy!
+1. Enjoy!
 
 ## What's included
 This package is a like a metapackage, but with a little sugar on top.  
