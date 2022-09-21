@@ -21,7 +21,7 @@ jobs:
             - name: Install PHP dependencies (composer install)
               uses: php-actions/composer@v6
               with:
-                php_version: 8.0
+                php_version: "8.0"
                 php_extensions: xsl intl
             - name: Remove auth.json file
               run: rm -f $GITHUB_WORKSPACE/auth.json
