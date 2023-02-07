@@ -36,6 +36,7 @@
         <exclude name="BooleanArgumentFlag" />
         <exclude name="ElseExpression" />
         <exclude name="StaticAccess" />
+	<exclude name="MissingImport" />
     </rule>
 
     <!-- Import design ruleset with higher CouplingBetweenObjects limit -->
