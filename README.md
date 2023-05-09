@@ -64,6 +64,8 @@ The package includes a pre-commit script that will execute all of the provided t
 If you don't have a pre-commit script already, the package will automatically set up this one (as a symbolic link) when you install the package.  
 If you already have a pre-commit, you will have to merge the two manually.
 
+Another pre-commit script ( `pre-commit-with-bypass` ) is available if you need to be able to commit when somes test fail. After each tool if some test fail, the script will ak if you want to continue. The script need to be installed manually.
+
 ### Github actions workflow
 To ensure your project is always respecting the standards, this package adds a workflow for Github Actions that runs every included tool on your codebase.
 
