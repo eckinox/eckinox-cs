@@ -6,3 +6,4 @@ parameters:
 		container_xml_path: var/cache/dev/App_KernelDevDebugContainer.xml
 	ignoreErrors:
 		- '#Unable to resolve the template type TMaybeContained#'
+	reportUnmatchedIgnoredErrors: false
