@@ -25,5 +25,6 @@ return $config->setRules([
         'increment_style' => ['style' => 'post'],
         'concat_space' => false,
 		'single_quote' => false,
+        'method_argument_space' => ['on_multiline' => 'ignore'],
     ])
     ->setFinder($finder);
