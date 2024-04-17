@@ -40,15 +40,15 @@ Here's a bit of information about all of that.
 ### Tools and packages
 Here are the tools that are included and configured in this package:
 
-| Tool                                                                                                                                  | Config                           | Git-aware |
-|---------------------------------------------------------------------------------------------------------------------------------------|----------------------------------|-----------|
-| [EditorConfig](https://editorconfig.org/)<br>Helps maintain consistent coding styles across various editors and IDEs.                 | `.editorconfig`                  |    N/A    |
-| [PHP-CS-Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer)<br>A tool to automatically fix PHP Coding Standards issues               | `.php_cs.dist`                   |     ✅     |
-| [PHPStan](https://phpstan.org/)<br>PHP Static Analysis Tool - discover bugs in your code without running it!                          | `phpstan.neon`                   |     ✅     |
-| [PHPMD](https://phpmd.org/)<br>PHP Mess Detector                                                                                      | `.phpmd.xml`                     |     ✅     |
-| [Twigcs](https://github.com/friendsoftwig/twigcs)<br>The missing checkstyle for twig!                                                 | N/A                              |     ❌     |
-| [ESLint](https://eslint.org/)<br>Find and fix problems in your JavaScript code                                                        | `.eslintrc.json` `.eslintignore` |     ❌     |
-| [CSS stylelint](https://stylelint.io/)<br>A mighty, modern linter that helps you avoid errors and enforce conventions in your styles. | `.stylelintrc.json`              |     ❌     |
+| Tool                                                                                                                                  | Config                           | Git-aware   |
+|---------------------------------------------------------------------------------------------------------------------------------------|----------------------------------|-------------|
+| [EditorConfig](https://editorconfig.org/)<br>Helps maintain consistent coding styles across various editors and IDEs.                 | `.editorconfig`                  | N/A         |
+| [PHP-CS-Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer)<br>A tool to automatically fix PHP Coding Standards issues               | `.php_cs.dist`                   | ✅           |
+| [PHPStan](https://phpstan.org/)<br>PHP Static Analysis Tool - discover bugs in your code without running it!                          | `phpstan.neon`                   | ✅           |
+| [PHPMD](https://phpmd.org/)<br>PHP Mess Detector                                                                                      | `.phpmd.xml`                     | ✅           |
+| [Twig-CS-Fixer](https://github.com/VincentLanglet/Twig-CS-Fixer)<br>The missing checkstyle for twig!                                  | `.twig-cs-fixer.dist.php`        | ❌           |
+| [ESLint](https://eslint.org/)<br>Find and fix problems in your JavaScript code                                                        | `.eslintrc.json` `.eslintignore` | ❌           |
+| [CSS stylelint](https://stylelint.io/)<br>A mighty, modern linter that helps you avoid errors and enforce conventions in your styles. | `.stylelintrc.json`              | ❌           |
 
 The _Git-aware_ column indicates tools whose provided execution script (located in `DEV/cs/`) will only take into account staged files, instead of running on every file in your project every time.
 
